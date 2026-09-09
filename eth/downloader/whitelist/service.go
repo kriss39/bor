@@ -271,8 +271,10 @@ func (s *Service) checkForkCorrectness(chain []*types.Header) bool {
 		return true
 	}
 
-	// Track all blocks iterated for caching
-	var blocksChecked []common.Hash = make([]common.Hash, 0, s.maxForkCorrectnessLimit)
+	// Track all blocks iterated for caching. Keep the configured traversal limit
+	// unchanged, but bound the initial allocation to avoid oversized preallocation.
+	blocksCheckedCapacity := min(s.maxForkCorrectnessLimit, 2*DefaultMaxForkCorrectnessLimit)
+	blocksChecked := make([]common.Hash, 0, blocksCheckedCapacity)
 	// Cache the incoming chain by default
 	for _, header := range chain {
 		blocksChecked = append(blocksChecked, header.Hash())
