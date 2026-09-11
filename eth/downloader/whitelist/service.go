@@ -29,6 +29,10 @@ var (
 	DefaultMaxForkCorrectnessLimit = uint64(256)
 )
 
+func forkValidationInitialCapacity(limit uint64) uint64 {
+	return min(limit, 2*DefaultMaxForkCorrectnessLimit)
+}
+
 type Service struct {
 	db ethdb.Database
 	checkpointService
@@ -273,7 +277,7 @@ func (s *Service) checkForkCorrectness(chain []*types.Header) bool {
 
 	// Track all blocks iterated for caching. Keep the configured traversal limit
 	// unchanged, but bound the initial allocation to avoid oversized preallocation.
-	blocksCheckedCapacity := min(s.maxForkCorrectnessLimit, 2*DefaultMaxForkCorrectnessLimit)
+	blocksCheckedCapacity := forkValidationInitialCapacity(s.maxForkCorrectnessLimit)
 	blocksChecked := make([]common.Hash, 0, blocksCheckedCapacity)
 	// Cache the incoming chain by default
 	for _, header := range chain {
