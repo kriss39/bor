@@ -10,7 +10,7 @@ import (
 )
 
 func TestForkValidationInitialCapacity(t *testing.T) {
-	require.Equal(t, uint64(2*DefaultMaxForkCorrectnessLimit), forkValidationInitialCapacity(math.MaxUint64))
+	require.Equal(t, 2*DefaultMaxForkCorrectnessLimit, forkValidationInitialCapacity(math.MaxUint64))
 	require.Equal(t, uint64(128), forkValidationInitialCapacity(128))
 }
 
