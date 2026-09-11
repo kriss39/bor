@@ -9,6 +9,11 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+func TestForkValidationInitialCapacity(t *testing.T) {
+	require.Equal(t, uint64(2*DefaultMaxForkCorrectnessLimit), forkValidationInitialCapacity(math.MaxUint64))
+	require.Equal(t, uint64(128), forkValidationInitialCapacity(128))
+}
+
 func TestCheckForkCorrectnessLargeLimit(t *testing.T) {
 	db := rawdb.NewMemoryDatabase()
 	service := NewService(db, false, math.MaxUint64)
